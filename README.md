@@ -1,4 +1,4 @@
-# VXLAN Configuration Validation Test Suite
+# pyATS VXLAN Test Suite
 
 A comprehensive automated test suite for validating VXLAN (Virtual Extensible LAN) configurations on Cisco NX-OS N9K switches using the pyATS framework.
 
@@ -18,21 +18,22 @@ This test suite provides automated validation of VXLAN overlay network configura
 ## Prerequisites
 
 ### Software Requirements
+- Python 3.6 or higher
+- pyATS framework
+- Genie library
 
+Install core dependencies:
 ```bash
-# Core Dependencies
 pip install pyats[full]
 pip install genie
 ```
 
 ### Hardware Requirements
-
 - Cisco Nexus 9000 series switches
 - NX-OS version 7.0 or higher
 - VXLAN feature licensing (if applicable)
 
 ### Network Requirements
-
 - Management connectivity to all devices
 - SSH/NETCONF access configured
 - Proper device credentials
@@ -40,22 +41,27 @@ pip install genie
 ## Installation
 
 1. **Clone or download the test suite:**
-```bash
-# Save the test suite as vxlan_validation.py
-wget <your-repo>/vxlan_validation.py
-chmod +x vxlan_validation.py
-```
+   ```bash
+   # Clone the repository
+   git clone https://github.com/emomeni/pyats-vxlan-testsuite.git
+   cd pyats-vxlan-testsuite
+   
+   # Or download directly
+   wget https://github.com/emomeni/pyats-vxlan-testsuite/archive/main.zip
+   unzip main.zip
+   ```
 
 2. **Install dependencies:**
-```bash
-pip install pyats[full] genie
-```
+   ```bash
+   pip install pyats[full] genie
+   ```
 
-3. **Create testbed file (see Configuration section)**
+3. **Make the script executable:**
+   ```bash
+   chmod +x vxlan_validation.py
+   ```
 
 ## Configuration
-
-### Testbed Configuration
 
 Create a YAML testbed file (`testbed.yaml`) defining your network devices:
 
@@ -106,14 +112,12 @@ devices:
 
 ## Usage
 
-### Basic Execution
-
+### Basic Usage
 ```bash
 python vxlan_validation.py --testbed testbed.yaml
 ```
 
-### Advanced Usage
-
+### Advanced Options
 ```bash
 # Run with specific log level
 python vxlan_validation.py --testbed testbed.yaml --loglevel INFO
@@ -127,69 +131,68 @@ python vxlan_validation.py --testbed testbed.yaml --html-logs ./reports/
 
 ## Test Categories
 
-### 1. Feature Validation (`VxlanFeatureValidation`)
+### 1. Feature Validation
 - **VXLAN Feature Status**: Verifies `feature vn-segment-vlan-based` is enabled
 - **NVE Feature Status**: Confirms `feature nv overlay` is enabled
 
-### 2. Interface Validation (`VxlanInterfaceValidation`)
+### 2. NVE Interface Tests
 - **NVE Interface Status**: Checks NVE1 interface operational state
 - **Source Interface**: Validates source-interface configuration
 - **Peer Relationships**: Verifies NVE peer connectivity and status
 
-### 3. VNI Validation (`VxlanVniValidation`)
+### 3. VNI Configuration Tests
 - **VNI-to-VLAN Mapping**: Confirms proper Layer 2 VNI associations
 - **Ingress Replication**: Validates replication methods (BGP/Static)
 - **VNI Configuration**: Checks VNI operational parameters
-
-### 4. Layer 3 VNI Validation (`VxlanL3VniValidation`)
 - **L3 VNI Configuration**: Verifies L3 VNI and VRF associations
+
+### 4. Layer 3 Gateway Tests
 - **Anycast Gateway**: Validates anycast gateway MAC configuration
 - **SVI Interfaces**: Checks SVI interface configurations
 
-### 5. BGP EVPN Validation (`VxlanBgpValidation`)
+### 5. BGP EVPN Tests
 - **BGP EVPN Configuration**: Verifies BGP L2VPN EVPN address family
 - **Neighbor Relationships**: Checks BGP EVPN neighbor states
 - **Route Advertisement**: Validates EVPN route advertisements and RDs
 
-### 6. MAC Learning Validation (`VxlanMacAddressValidation`)
+### 6. MAC Address Learning
 - **MAC Address Tables**: Verifies MAC learning in VXLAN VLANs
 - **Remote MAC Entries**: Checks remote MAC address learning
 
-### 7. Multicast Validation (`VxlanMulticastValidation`)
+### 7. Multicast Tests
 - **Multicast Groups**: Validates multicast group configurations (if used)
 - **Multicast Forwarding**: Checks multicast forwarding for BUM traffic
 
-### 8. Health Monitoring (`VxlanHealthCheck`)
+### 8. Performance & Monitoring
 - **Interface Statistics**: Monitors NVE interface counters for errors
 - **Resource Usage**: Tracks VNI utilization and capacity planning
 - **Performance Metrics**: Identifies potential performance issues
 
 ## Test Results
 
-### Result Interpretation
+### Status Indicators
+- ✅ **PASSED**: Test completed successfully, configuration is correct
+- ❌ **FAILED**: Test failed, configuration issue detected
+- ⏭️ **SKIPPED**: Test skipped (feature not configured or not applicable)
 
-- **✅ PASSED**: Test completed successfully, configuration is correct
-- **❌ FAILED**: Test failed, configuration issue detected
-- **⏭️ SKIPPED**: Test skipped (feature not configured or not applicable)
+### Common Issues and Solutions
 
-### Common Failure Scenarios
+#### Feature Not Enabled
+- **Solution**: Enable required features (`feature vn-segment-vlan-based`, `feature nv overlay`)
 
-1. **Feature Not Enabled**
-   - Solution: Enable required features (`feature vn-segment-vlan-based`, `feature nv overlay`)
+#### NVE Interface Down
+- **Solution**: Check source-interface configuration and underlay connectivity
 
-2. **NVE Interface Down**
-   - Solution: Check source-interface configuration and underlay connectivity
+#### BGP EVPN Neighbors Down
+- **Solution**: Verify BGP configuration, route reflector setup, and network connectivity
 
-3. **BGP EVPN Neighbors Down**
-   - Solution: Verify BGP configuration, route reflector setup, and network connectivity
+#### Missing VNI Mappings
+- **Solution**: Configure VNI-to-VLAN mappings and ensure consistency across fabric
 
-4. **Missing VNI Mappings**
-   - Solution: Configure VNI-to-VLAN mappings and ensure consistency across fabric
+#### High Resource Usage
+- **Solution**: Review VNI allocation and consider hardware capacity planning
 
-5. **High Resource Usage**
-   - Solution: Review VNI allocation and consider hardware capacity planning
-
-## Logging and Debugging
+## Logging
 
 ### Log Levels
 - **DEBUG**: Detailed execution information
@@ -197,7 +200,7 @@ python vxlan_validation.py --testbed testbed.yaml --html-logs ./reports/
 - **WARNING**: Non-critical issues detected
 - **ERROR**: Critical errors requiring attention
 
-### Log Files
+### Output Options
 - Console output provides real-time test progress
 - Detailed logs available in pyATS job logs directory
 - HTML reports generated with `--html-logs` option
@@ -205,7 +208,6 @@ python vxlan_validation.py --testbed testbed.yaml --html-logs ./reports/
 ## Customization
 
 ### Adding Custom Tests
-
 ```python
 class CustomVxlanTest(aetest.Testcase):
     """Custom VXLAN validation test"""
@@ -219,10 +221,8 @@ class CustomVxlanTest(aetest.Testcase):
                 pass
 ```
 
-### Modifying Test Parameters
-
+### Modifying Thresholds
 Edit the test thresholds and parameters in the code:
-
 ```python
 # Example: Modify VNI usage warning threshold
 if vni_count > 8000:  # Adjust threshold as needed
@@ -231,64 +231,60 @@ if vni_count > 8000:  # Adjust threshold as needed
 
 ## Troubleshooting
 
-### Common Issues
+### Connection Failures
+- **Error**: Failed to connect to device
+- **Solution**: Verify IP addresses, credentials, and SSH connectivity
 
-1. **Connection Failures**
-   ```
-   Error: Failed to connect to device
-   Solution: Verify IP addresses, credentials, and SSH connectivity
-   ```
+### Parser Errors
+- **Error**: Command output parsing failed
+- **Solution**: Check NX-OS version compatibility and command syntax
 
-2. **Parser Errors**
-   ```
-   Error: Command output parsing failed
-   Solution: Check NX-OS version compatibility and command syntax
-   ```
-
-3. **Permission Denied**
-   ```
-   Error: Insufficient privileges
-   Solution: Ensure user has appropriate RBAC permissions
-   ```
+### Permission Denied
+- **Error**: Insufficient privileges
+- **Solution**: Ensure user has appropriate RBAC permissions
 
 ### Debug Mode
-
+Enable debug logging for detailed troubleshooting:
 ```bash
-# Enable debug logging
 python vxlan_validation.py --testbed testbed.yaml --loglevel DEBUG
 ```
 
 ## Best Practices
 
-1. **Pre-Test Validation**
-   - Verify basic device connectivity before running tests
-   - Ensure VXLAN features are licensed and available
+### Pre-Test Validation
+- Verify basic device connectivity before running tests
+- Ensure VXLAN features are licensed and available
 
-2. **Testbed Organization**
-   - Group devices logically (leaf, spine, border-leaf)
-   - Use consistent naming conventions
+### Testbed Organization
+- Group devices logically (leaf, spine, border-leaf)
+- Use consistent naming conventions
 
-3. **Regular Testing**
-   - Integrate into CI/CD pipelines for configuration validation
-   - Run after configuration changes to detect issues early
+### Regular Testing
+- Integrate into CI/CD pipelines for configuration validation
+- Run after configuration changes to detect issues early
 
-4. **Monitoring Integration**
-   - Export test results to monitoring systems
-   - Set up alerts for critical test failures
+### Monitoring Integration
+- Export test results to monitoring systems
+- Set up alerts for critical test failures
 
 ## Support
 
 For issues and questions:
-
-1. Check the troubleshooting section above
-2. Review pyATS documentation: https://pubhub.devnetcloud.com/media/pyats/docs/
-3. Consult Cisco VXLAN configuration guides
-4. Review device-specific documentation
+- Check the troubleshooting section above
+- Review pyATS documentation: [https://pubhub.devnetcloud.com/media/pyats/docs/](https://pubhub.devnetcloud.com/media/pyats/docs/)
+- Consult Cisco VXLAN configuration guides
+- Review device-specific documentation
 
 ## License
 
 This test suite is provided as-is for educational and operational purposes. Ensure compliance with your organization's testing and validation policies.
 
----
+## Disclaimer
 
 **Note**: Always test in a non-production environment before deploying to production networks.
+
+---
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit issues, feature requests, or pull requests to improve this test suite.
