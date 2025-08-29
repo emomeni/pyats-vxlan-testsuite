@@ -382,4 +382,6 @@ def extract_numbers_from_string(text: str) -> List[int]:
 def is_valid_ip(ip: str) -> bool:
     """Validate IP address format"""
     pattern = r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
-    return bool(re.match(pattern, ip))
+    if not re.match(pattern, ip):
+        return False
+    return all(0 <= int(octet) <= 255 for octet in ip.split('.'))
