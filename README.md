@@ -1,3 +1,5 @@
+![CodeRabbit Pull Request Reviews](https://img.shields.io/coderabbit/prs/github/emomeni/pyats-vxlan-testsuite?utm_source=oss&utm_medium=github&utm_campaign=emomeni%2Fpyats-vxlan-testsuite&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews)
+
 # 🔧 pyATS VXLAN Validation Test Suite
 
 This repository is a comprehensive validation toolkit for **Cisco Nexus VXLAN/EVPN fabrics**, featuring:
