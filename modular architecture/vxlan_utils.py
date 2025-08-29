@@ -380,7 +380,17 @@ def extract_numbers_from_string(text: str) -> List[int]:
     return [int(match) for match in re.findall(r'\d+', text)]
 
 def is_valid_ip(ip: str) -> bool:
-    """Validate IP address format"""
+    """
+    Return True if the input is a valid IPv4 address in dotted-decimal notation.
+    
+    The function first checks the basic dotted-quad format, then ensures each octet is within 0–255. Returns False for any string that does not match the IPv4 format or contains an out-of-range octet.
+    
+    Args:
+        ip (str): IPv4 address string in dotted-decimal form (e.g., "192.0.2.1").
+    
+    Returns:
+        bool: True if `ip` is a valid IPv4 address, False otherwise.
+    """
     pattern = r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$'
     if not re.match(pattern, ip):
         return False
